@@ -85,14 +85,7 @@ docker rm -f pdfcheck-pg-test
   keeps the reports already done and marks the rest "Not checked yet".
 - One lead per check and email: sending again updates that lead instead of adding a duplicate.
 
-## Deploy for free (Render)
+## Deploy for free
 
-1. Create a free Postgres on Neon or Supabase and copy its connection string.
-2. On Render: New > Blueprint, pick this repo. `render.yaml` sets the build and start commands and
-   the health check. Fill in `CONTACT_EMAIL`, `SITE_URL`, `DATABASE_URL`, the `SMTP_*` values and
-   `ADMIN_PASSWORD`.
-3. After the first deploy, open `/admin`, expand "Check the rate-limit address" and set `PROXY_HOPS`
-   (or `CLIENT_IP_HEADER`) so the first line shows your own IP.
-
-The free tier sleeps after 15 minutes idle; the first request then takes about 30 seconds.
-Vercel also runs FastAPI, but caps request bodies at 4.5 MB, so lower `MAX_BYTES` in `audit.py` to match.
+See [DEPLOY.md](DEPLOY.md): Render (recommended, works as-is) or Vercel (4 MB file limit, needs a small
+code change first), with Neon for the database and Resend for email.
