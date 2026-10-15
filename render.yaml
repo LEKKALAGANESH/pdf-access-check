@@ -1,0 +1,34 @@
+# Render blueprint: New > Blueprint, pick this repo, then fill in the values marked sync: false.
+services:
+  - type: web
+    name: pdf-access-check
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.14.6"
+      - key: CONTACT_EMAIL        # public address shown on the site and used as the email sender
+        sync: false
+      - key: SITE_URL             # https://your-domain, no trailing slash (canonical, sitemap, report links)
+        sync: false
+      - key: DATABASE_URL         # Neon or Supabase Postgres; without it leads vanish on every deploy
+        sync: false
+      - key: SMTP_HOST            # e.g. smtp.resend.com or smtp.gmail.com
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: LEADS_TO             # optional: inbox for new leads (defaults to CONTACT_EMAIL)
+        sync: false
+      - key: ADMIN_PASSWORD       # turns on /admin; use a long random password
+        sync: false
+      - key: PROXY_HOPS           # set after deploy using /admin > "Check the rate-limit address"
+        sync: false
+      - key: PLAUSIBLE_DOMAIN     # optional: your domain as added in Plausible
+        sync: false

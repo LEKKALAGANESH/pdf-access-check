@@ -1,0 +1,364 @@
+@font-face {
+  font-family: "Public Sans";
+  src: url("/static/fonts/public-sans.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+:root {
+  --ink: #1a2433;
+  --ink-soft: #46546a;
+  --paper: #f5f8fa;
+  --sheet: #ffffff;
+  --civic: #0a5c6b;
+  --civic-dark: #074652;
+  --pass: #1e6b3a;
+  --fail: #a4262c;
+  --muted: #5d6b7e;
+  --line: #c9d3dc;
+  --highlight: #ffe27a;
+  --link: #074652;
+  --on-civic: #ffffff;
+  --close: #8a4b00;
+  --fail-bg: #fdf1f1;
+  --over: #fff8d6;
+  --disabled: #5d6b7e;
+  --quiet-edge: #0a5c6b;
+  --radius-control: 6px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
+  --space-6: 4rem;
+  --measure: 68ch;
+  color-scheme: light;
+}
+
+/* Dark theme (screens only, so printing stays dark-on-white): same roles, every text pair checked at 4.5:1 or better. */
+@media screen and (prefers-color-scheme: dark) {
+  :root {
+    --ink: #e7edf3;
+    --ink-soft: #b7c3cf;
+    --paper: #0e151c;
+    --sheet: #16202a;
+    --pass: #6fd393;
+    --fail: #ff8f8f;
+    --muted: #93a3b3;
+    --line: #2e3d4b;
+    --link: #7cc8d6;
+    --close: #f2b45c;
+    --fail-bg: #3a1d20;
+    --over: #3a3413;
+    --disabled: #4a5866;
+    --quiet-edge: #7cc8d6;
+    color-scheme: dark;
+  }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* Component display rules (.lead is a grid) must never un-hide a [hidden] element. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 1.0625rem/1.55 "Public Sans", system-ui, sans-serif;
+}
+
+.skip {
+  position: absolute;
+  left: var(--space-3);
+  top: -4rem;
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--space-2) var(--space-3);
+}
+.skip:focus { top: var(--space-3); }
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--highlight);
+}
+
+header.site, footer.site, main {
+  width: min(100% - 2rem, 52rem);
+  margin-inline: auto;
+}
+
+header.site {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2) var(--space-4);
+  padding-block: var(--space-4) 0;
+}
+.brand { margin: 0; font-weight: 800; letter-spacing: -0.01em; }
+.contact { margin: 0; color: var(--ink-soft); overflow-wrap: anywhere; }
+a { color: var(--link); }
+.brand-link { color: inherit; text-decoration: none; }
+
+footer.site {
+  padding-block: var(--space-5);
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 var(--space-3); }
+h1 { font-size: clamp(2rem, 1.3rem + 3vw, 3.25rem); font-weight: 800; max-width: 18ch; }
+h2 { font-size: clamp(1.375rem, 1.1rem + 1vw, 1.75rem); font-weight: 750; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { max-width: var(--measure); }
+
+.intro { padding-block: var(--space-5) var(--space-4); }
+.lede { font-size: 1.25rem; margin: 0 0 var(--space-3); }
+.deadline {
+  margin: 0;
+  padding-left: var(--space-3);
+  border-left: 4px solid var(--civic);
+  color: var(--ink-soft);
+}
+
+/* The drop area reads like the intake box on a paper form. */
+.drop {
+  background: var(--sheet);
+  border: 2px dashed var(--ink-soft);
+  border-radius: 2px;
+  padding: var(--space-5) var(--space-4);
+}
+.drop.is-over { background: var(--over); border-color: var(--ink); border-style: solid; }
+.drop-label {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  cursor: pointer;
+}
+.drop-title { font-size: 1.375rem; font-weight: 700; }
+.drop-or { color: var(--muted); }
+.limits { margin: var(--space-3) 0 0; color: var(--muted); font-size: 0.9375rem; }
+.drop:has(input:focus-visible) .button { outline: 3px solid var(--ink); outline-offset: 2px; box-shadow: 0 0 0 6px var(--highlight); }
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border: 2px solid transparent; /* invisible normally; becomes the button's edge in forced-colors mode */
+  border-radius: var(--radius-control);
+  background: var(--civic);
+  color: var(--on-civic);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.button:active { background: var(--ink); }
+.button[disabled], .button[aria-disabled="true"] { background: var(--disabled); cursor: progress; }
+@media (hover: hover) {
+  .button:hover { background: var(--civic-dark); }
+}
+/* Secondary actions: outlined so they never compete with the one filled button. */
+.button-quiet { min-height: 44px; padding: 0 var(--space-3); background: var(--sheet); color: var(--link); border-color: var(--quiet-edge); }
+.button-quiet:active { background: var(--line); }
+@media (hover: hover) {
+  .button-quiet:hover { background: var(--paper); }
+}
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--link);
+  font: inherit;
+  text-align: left;
+  text-decoration: underline;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+.link-button[aria-current="true"] { color: var(--ink); font-weight: 700; text-decoration: none; }
+@media (any-pointer: coarse) {
+  .link-button { min-height: 44px; }
+}
+
+.status { min-height: 1.6em; margin: var(--space-3) 0 0; font-weight: 600; }
+.status.is-busy::before {
+  content: "";
+  display: inline-block;
+  width: 0.9em; height: 0.9em;
+  margin-right: var(--space-2);
+  vertical-align: -0.1em;
+  border: 3px solid var(--line);
+  border-top-color: var(--civic);
+  border-radius: 50%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .status.is-busy::before { animation: spin 0.8s linear infinite; }
+}
+@keyframes spin { to { transform: rotate(1turn); } }
+
+.error-box {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3);
+  border-left: 4px solid var(--fail);
+  background: var(--fail-bg);
+  color: var(--fail);
+  font-weight: 600;
+}
+.error-box p { margin: 0; }
+.error-box .error-help { margin-top: var(--space-2); color: var(--ink); font-weight: 400; overflow-wrap: anywhere; }
+
+.report, .quote { padding-block: var(--space-5) 0; }
+
+.report-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+#report-title { overflow-wrap: anywhere; }
+.summary { margin: 0; color: var(--ink-soft); }
+.report-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-3); }
+.share-status { min-height: 1.5em; margin: var(--space-2) 0 0; color: var(--ink-soft); font-size: 0.9375rem; overflow-wrap: anywhere; }
+
+.batch { padding-block: var(--space-5) 0; }
+.table-scroll { margin-top: var(--space-3); overflow-x: auto; background: var(--sheet); border: 1px solid var(--line); }
+.data-table { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.data-table th, .data-table td { padding: var(--space-2) var(--space-3); border-top: 1px solid var(--line); text-align: left; vertical-align: top; }
+.data-table thead th { border-top: 0; color: var(--ink-soft); font-size: 0.875rem; font-weight: 700; }
+.data-table tbody th { font-weight: 400; overflow-wrap: anywhere; }
+.data-table .is-error { color: var(--fail); font-weight: 600; }
+/* On a phone the batch table scrolls sideways instead of squeezing file names to one letter per line;
+   the file column stays pinned so you always know which row you're reading. */
+.batch .data-table { min-width: 34rem; }
+.batch .data-table td:not(.is-error) { white-space: nowrap; }
+.batch .data-table tr > :first-child { position: sticky; left: 0; z-index: 1; width: 40%; background: var(--sheet); box-shadow: 1px 0 0 var(--line); }
+.table-hint { margin: var(--space-3) 0 0; color: var(--ink-soft); font-size: 0.9375rem; }
+.report-meta { display: none; }
+
+/* The one loud element: the score as an inspection stamp. */
+.stamp {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 5px double currentColor;
+  color: var(--fail);
+  background: var(--sheet);
+  min-width: 10rem;
+}
+.stamp.is-close { color: var(--close); }
+.stamp.is-good { color: var(--pass); }
+.stamp-score { font-size: 3.25rem; font-weight: 900; line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
+.stamp-of { font-size: 1.25rem; font-weight: 700; }
+.stamp-verdict { font-weight: 800; font-size: 1.0625rem; }
+@media (prefers-reduced-motion: no-preference) {
+  .stamp.is-new { animation: stamp-in 260ms cubic-bezier(.2,.9,.3,1.3); }
+}
+@keyframes stamp-in { from { transform: scale(1.25) rotate(-4deg); opacity: 0; } }
+
+.checks { list-style: none; margin: 0; padding: 0; background: var(--sheet); border: 1px solid var(--line); }
+.check {
+  display: grid;
+  grid-template-columns: 6.5rem 1fr;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3);
+  border-top: 1px solid var(--line);
+}
+.check:first-child { border-top: 0; }
+.check-status { font-weight: 800; font-size: 0.9375rem; }
+.check-status::before { display: inline-block; width: 1.2em; }
+.check.is-fail .check-status { color: var(--fail); }
+.check.is-fail .check-status::before { content: "✕"; }
+.check.is-pass .check-status { color: var(--pass); }
+.check.is-pass .check-status::before { content: "✓"; }
+.check.is-na .check-status { color: var(--muted); }
+.check.is-na .check-status::before { content: "–"; }
+.check-title { margin: 0; font-size: 1.0625rem; font-weight: 700; }
+.check-body { min-width: 0; }
+.check-body p { margin: var(--space-1) 0 0; }
+.check-rule { color: var(--muted); font-size: 0.875rem; }
+.check-fix { color: var(--ink); }
+.check-fix strong { font-weight: 700; }
+
+.caveat { color: var(--muted); font-size: 0.9375rem; margin-top: var(--space-3); }
+
+.quote {
+  margin-top: var(--space-5);
+  border-top: 4px solid var(--ink);
+}
+.price { white-space: nowrap; }
+.price-basis { color: var(--ink-soft); margin-top: 0; }
+
+.lead {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+}
+.field { display: grid; gap: var(--space-1); }
+.field-wide { grid-column: 1 / -1; }
+.field label { font-weight: 600; }
+.optional { color: var(--muted); font-weight: 400; }
+.field input, .field textarea {
+  min-height: 48px;
+  padding: var(--space-2) var(--space-3);
+  border: 2px solid var(--ink-soft);
+  border-radius: var(--radius-control);
+  background: var(--sheet);
+  color: var(--ink);
+  font: inherit;
+}
+.field [aria-invalid="true"] { border-color: var(--fail); }
+.lead .button { justify-self: start; }
+.privacy-note { margin: 0; color: var(--ink-soft); font-size: 0.9375rem; }
+.trap { position: absolute; left: -10000px; }
+
+.done {
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: var(--sheet);
+  border-left: 6px solid var(--pass);
+}
+.done p { margin: 0; }
+
+.prose { padding-block: var(--space-5) 0; }
+.prose h2 { margin-top: var(--space-5); }
+main.admin { width: min(100% - 2rem, 80rem); padding-block: var(--space-5); }
+main.admin .data-table td:not(:last-child) { white-space: nowrap; } /* the table scrolls; values stay whole */
+main.admin .data-table td:last-child { min-width: 16rem; }
+
+@media (max-width: 30rem) {
+  .check { grid-template-columns: 1fr; }
+  .stamp { min-width: 0; width: 100%; grid-auto-flow: column; justify-content: space-between; align-items: center; }
+  .drop { padding: var(--space-4) var(--space-3); }
+  /* Full-width stamp: growing it on entry would push the page sideways, so it only turns and fades in. */
+  .stamp.is-new { animation-name: stamp-in-narrow; }
+}
+@keyframes stamp-in-narrow { from { transform: rotate(-2deg); opacity: 0; } }
+
+/* Printed for a manager: the results and the price, without the upload box or the form. */
+@media print {
+  html { font-size: 90%; }
+  body { background: #fff; }
+  .skip, .intro, .intake, .lead, .done, .report-actions, .share-status { display: none !important; }
+  .table-scroll { overflow: visible; }
+  .table-hint { display: none; }
+  .batch .data-table { min-width: 0; }
+  .report-meta { display: block; margin: var(--space-2) 0 0; color: var(--ink-soft); overflow-wrap: anywhere; }
+  .check { break-inside: avoid; }
+  .stamp.is-new { animation: none; }
+  .report, .quote { padding-top: var(--space-4); }
+  footer.site { padding-block: var(--space-3) 0; break-inside: avoid; }
+}

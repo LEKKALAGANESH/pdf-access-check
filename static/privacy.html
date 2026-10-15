@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy · PDF Access Check</title>
+  <meta name="description" content="What PDF Access Check keeps when you check a PDF or request a fix, and how to have it deleted.">
+  <meta name="color-scheme" content="light dark">
+  {{HEAD}}
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/static/fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the content</a>
+  <header class="site">
+    <p class="brand"><a class="brand-link" href="/">PDF Access Check</a></p>
+    <p class="contact">Questions? <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
+  </header>
+
+  <main id="main" class="prose">
+    <h1>Privacy</h1>
+    <p class="summary">Last updated October 14, 2026.</p>
+
+    <h2>When you check a PDF</h2>
+    <p>Your PDF is read in memory and never saved. We keep only the results: the file name, the number of pages and scanned pages, the score, the result of each check and the price we showed. That is what lets your report open again from its link.</p>
+
+    <h2>When you request a fix</h2>
+    <p>We keep your name, work email, organization and message, and use them only to reply with a confirmed price and to do the work. We send you one confirmation email. We don't add you to a mailing list.</p>
+
+    <h2>Report links</h2>
+    <p>Anyone who has a report's link can open that report. Links are long random codes, and we tell search engines not to list them.</p>
+
+    <h2>Visits and security</h2>
+    <p>Our server records each request's page, result and timing, without your name or email. To stop abuse it remembers your IP address for 10 minutes, in memory only. Our hosting provider may keep its own standard access logs. {{ANALYTICS_NOTE}} This site sets no cookies.</p>
+
+    <h2>Sharing and deletion</h2>
+    <p>We don't sell or share your details. We keep results and requests until you ask us to delete them. To delete them, email <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> from the address you used.</p>
+
+    <p><a class="button" href="/">Check a PDF</a></p>
+  </main>
+
+  <footer class="site">
+    <p>This tool does not give legal advice. Contact: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Free PDF accessibility check · ADA Title II</title>
+  <meta name="description" content="Upload a PDF and get a free WCAG 2.1 AA and PDF/UA accessibility check in seconds, plus a fixed price to make it compliant.">
+  <meta name="color-scheme" content="light dark">
+  {{HEAD}}
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="/static/fonts/public-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="/static/app.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to the check</a>
+  <header class="site">
+    <p class="brand">PDF Access Check</p>
+    <p class="contact">Questions? <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
+  </header>
+
+  <main id="main">
+    <section class="intro" aria-labelledby="headline">
+      <h1 id="headline">Will your PDFs pass the ADA Title II rule?</h1>
+      <p class="lede">Upload a PDF, or up to 20 at once. In a few seconds you get a free check against WCAG&nbsp;2.1&nbsp;AA and PDF/UA, and a fixed price to make it accessible.</p>
+      <p class="deadline">State and local governments, schools and public colleges must meet WCAG&nbsp;2.1&nbsp;AA for web documents. Deadlines: April&nbsp;26,&nbsp;2027 if you serve 50,000 people or more, and April&nbsp;26,&nbsp;2028 if you serve fewer or are a special district.</p>
+    </section>
+
+    <section class="intake" aria-labelledby="intake-title">
+      <h2 id="intake-title" class="visually-hidden">Upload a PDF</h2>
+      <form id="upload-form" class="drop" action="/api/audit" method="post" enctype="multipart/form-data">
+        <label for="file" class="drop-label">
+          <span class="drop-title">Drop PDFs here</span>
+          <span class="drop-or">or</span>
+          <span class="button">Choose PDFs</span>
+        </label>
+        <input id="file" name="file" type="file" accept="application/pdf,.pdf" multiple class="visually-hidden" aria-describedby="limits">
+        <p id="limits" class="limits">Up to 20 files, each up to 25&nbsp;MB and 300 pages. Each file is checked in memory and deleted right away. We keep only the results.</p>
+      </form>
+      <noscript><p class="error-box">This check needs JavaScript. Turn it on, or email your PDF to <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> for a manual check.</p></noscript>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+      <div id="upload-error" class="error-box" role="alert" hidden>
+        <p id="upload-error-text"></p>
+        <p class="error-help">Our email: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a></p>
+      </div>
+    </section>
+
+    <section id="batch" class="batch" aria-labelledby="batch-title" hidden>
+      <h2 id="batch-title">Your files</h2>
+      <p id="batch-summary" class="summary"></p>
+      <p id="table-hint" class="table-hint" hidden>Scroll the table sideways to see every column.</p>
+      <div class="table-scroll" id="batch-scroll" role="region" aria-label="Table of your files" tabindex="0">
+        <table class="data-table">
+          <thead><tr><th scope="col">File</th><th scope="col">Pages</th><th scope="col">Score</th><th scope="col">Price</th></tr></thead>
+          <tbody id="batch-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="report" class="report" aria-labelledby="report-title" hidden>
+      <div class="report-head">
+        <div class="stamp" id="stamp">
+          <span class="stamp-score"><span id="score">0</span><span class="stamp-of">/100</span></span>
+          <span class="stamp-verdict" id="verdict"></span>
+        </div>
+        <div>
+          <h2 id="report-title" tabindex="-1">Results for <span id="filename"></span></h2>
+          <p id="summary" class="summary"></p>
+          <p id="report-meta" class="report-meta"></p>
+          <div class="report-actions">
+            <button type="button" class="button button-quiet" id="copy-link">Copy link to this report</button>
+            <button type="button" class="button button-quiet" id="print-report">Print or save as PDF</button>
+          </div>
+          <p id="share-status" class="share-status" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <ul id="checks" class="checks" aria-label="Checks"></ul>
+      <p class="caveat">This free check reads the file's structure. A full fix also includes a person reviewing reading order, tables and alt text, and a final pass with veraPDF and PAC.</p>
+    </section>
+
+    <section id="quote" class="quote" aria-labelledby="quote-title" hidden>
+      <h2 id="quote-title"></h2>
+      <p id="price-basis" class="price-basis"></p>
+      <form id="lead-form" class="lead" novalidate>
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" autocomplete="name" required maxlength="100">
+        </div>
+        <div class="field">
+          <label for="email">Work email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required maxlength="254">
+        </div>
+        <div class="field">
+          <label for="organization">Organization</label>
+          <input id="organization" name="organization" autocomplete="organization" required maxlength="150">
+        </div>
+        <div class="field field-wide">
+          <label for="message">How many PDFs do you have? <span class="optional">(optional)</span></label>
+          <textarea id="message" name="message" rows="3" maxlength="2000"></textarea>
+        </div>
+        <div class="trap" aria-hidden="true">
+          <label for="website">Leave this empty</label>
+          <input id="website" name="website" tabindex="-1" autocomplete="off">
+        </div>
+        <div id="lead-error" class="error-box field-wide" role="alert" hidden></div>
+        <button type="submit" class="button" id="lead-submit">Request the fix</button>
+        <p class="privacy-note field-wide">We use your details only to reply to this request. <a href="/privacy">How we handle your data</a></p>
+      </form>
+      <div id="lead-done" class="done" tabindex="-1" hidden>
+        <h3>Request sent</h3>
+        <p>We'll email you within one business day with a confirmed price and delivery date.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <p>Checks map to WCAG 2.1/2.2 success criteria and PDF/UA-1 (ISO 14289-1). This tool does not give legal advice. Contact: <a href="mailto:{{CONTACT_EMAIL}}">{{CONTACT_EMAIL}}</a> · <a href="/privacy">Privacy</a></p>
+  </footer>
+</body>
+</html>
