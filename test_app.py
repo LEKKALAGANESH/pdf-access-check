@@ -252,6 +252,22 @@ def test_upload_attempts_have_their_own_ceiling(client):
     assert codes[-1] == 429 and 429 not in codes[:-1]
 
 
+def test_postgres_tables_hide_rows_from_public_api_roles(client):
+    """Supabase can grant its public `anon` role access to tables in `public`; RLS must still hide every row."""
+    if not store.DATABASE_URL:
+        pytest.skip("Postgres only")
+    upload(client, make_pdf())
+    with psycopg.connect(store.DATABASE_URL, autocommit=True) as conn:
+        flags = conn.execute("SELECT relname, relrowsecurity FROM pg_class "
+                             "WHERE relname IN ('audits', 'leads') ORDER BY relname").fetchall()
+        assert flags == [("audits", True), ("leads", True)]
+        conn.execute("DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'anon') "
+                     "THEN CREATE ROLE anon NOLOGIN; END IF; END $$")
+        conn.execute("GRANT SELECT ON audits, leads TO anon")
+        conn.execute("SET ROLE anon")
+        assert conn.execute("SELECT count(*) FROM audits").fetchone() == (0,)
+
+
 def test_rate_limit_explains_why_and_when_to_retry(client):
     for _ in range(web.AUDIT_LIMIT):
         upload(client, make_pdf())

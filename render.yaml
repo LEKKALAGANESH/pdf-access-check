@@ -14,7 +14,7 @@ services:
         sync: false
       - key: SITE_URL             # https://your-domain, no trailing slash (canonical, sitemap, report links)
         sync: false
-      - key: DATABASE_URL         # Neon or Supabase Postgres; without it leads vanish on every deploy
+      - key: DATABASE_URL         # Supabase Session pooler string (IPv4, port 5432); without it leads vanish on every deploy
         sync: false
       - key: SMTP_HOST            # smtp.resend.com (see DEPLOY.md)
         sync: false

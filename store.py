@@ -1,6 +1,7 @@
 """Database access: a local SQLite file by default, Postgres when DATABASE_URL is set.
 
-Free hosts wipe their disk on every deploy, so production sets DATABASE_URL (Neon or Supabase free tier).
+Free hosts wipe their disk on every deploy, so production sets DATABASE_URL to a Supabase pooler connection
+string (see DEPLOY.md). Any Postgres works the same way.
 Both backends are used through the same call shape: `with connect() as conn: conn.execute(sql, params)`,
 written with `?` placeholders.
 """
@@ -66,6 +67,10 @@ POSTGRES_SCHEMA = [
     # Leading audit_id also serves the foreign-key lookups.
     "CREATE UNIQUE INDEX IF NOT EXISTS leads_audit_email ON leads(audit_id, email)",
     "CREATE INDEX IF NOT EXISTS leads_created_at ON leads(created_at DESC)",
+    # Supabase can expose tables in `public` to its anon role through the Data API. RLS with no policies
+    # hides every row from those roles; the app connects as the tables' owner, which RLS doesn't restrict.
+    "ALTER TABLE audits ENABLE ROW LEVEL SECURITY",
+    "ALTER TABLE leads ENABLE ROW LEVEL SECURITY",
 ]
 
 LEADS_QUERY = """
@@ -92,7 +97,8 @@ def connect():
     """One connection per call; commits on success, rolls back on error, always closes."""
     if DATABASE_URL:
         # ponytail: a new connection per request; add psycopg_pool when traffic needs it
-        with psycopg.connect(DATABASE_URL, connect_timeout=10) as conn:
+        # prepare_threshold=None: Supabase's transaction pooler (port 6543) can't hold prepared statements.
+        with psycopg.connect(DATABASE_URL, connect_timeout=10, prepare_threshold=None) as conn:
             yield _Postgres(conn)
         return
     conn = sqlite3.connect(DB_PATH)

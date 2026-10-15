@@ -39,7 +39,7 @@ See leads: open `/admin` (needs `ADMIN_PASSWORD`) or run `.venv\Scripts\python l
 |---|---|
 | `CONTACT_EMAIL` | Public address on the site and the sender of lead emails. Unset: shows `hello@example.com` and logs a warning. |
 | `SITE_URL` | `https://your-domain`, no trailing slash. Turns on canonical links, `og:url`, `sitemap.xml` and report links in emails. |
-| `DATABASE_URL` | Postgres (Neon or Supabase free tier). Unset: local `leads.db`, which free hosts wipe on every deploy. |
+| `DATABASE_URL` | Supabase pooler connection string (see DEPLOY.md); any Postgres works. Unset: local `leads.db`, which free hosts wipe on every deploy. |
 | `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_SECURITY` (`starttls`, `ssl` or `none`) | Email every new lead to you and send the buyer a fixed-text confirmation. Unset: no emails. |
 | `LEADS_TO` | Inbox for new leads. Default: `CONTACT_EMAIL`. |
 | `ADMIN_PASSWORD` | Turns on `/admin` (leads table and CSV export, HTTP Basic sign-in, any user name). Unset: `/admin` is a 404. |
@@ -72,6 +72,7 @@ docker rm -f pdfcheck-pg-test
 | `static/` | `index.html`, `privacy.html`, `404.html`, `style.css` (light and dark), `app.js`, favicon, Public Sans font. |
 | `leads.py` | Prints saved leads. |
 | `render.yaml` | Render blueprint with every setting listed. |
+| `.github/workflows/keep-awake.yml` | Daily ping of `/ready` so the free Supabase project never pauses (needs the repo variable `SITE_URL`). |
 | `test_app.py` | Builds test PDFs and checks every rule plus the API. |
 
 ## Limits of this version
@@ -88,4 +89,4 @@ docker rm -f pdfcheck-pg-test
 ## Deploy for free
 
 See [DEPLOY.md](DEPLOY.md): Render (recommended, works as-is) or Vercel (4 MB file limit, needs a small
-code change first), with Neon for the database and Resend for email.
+code change first), with Supabase for the database and Resend for email.
