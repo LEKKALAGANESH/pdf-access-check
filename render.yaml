@@ -16,10 +16,10 @@ services:
         sync: false
       - key: DATABASE_URL         # Neon or Supabase Postgres; without it leads vanish on every deploy
         sync: false
-      - key: SMTP_HOST            # e.g. smtp.resend.com or smtp.gmail.com
+      - key: SMTP_HOST            # smtp.resend.com (see DEPLOY.md)
         sync: false
-      - key: SMTP_PORT
-        value: "587"
+      - key: SMTP_PORT            # Render's free plan blocks 25, 465 and 587; Resend also listens on 2587
+        value: "2587"
       - key: SMTP_USER
         sync: false
       - key: SMTP_PASSWORD
